@@ -1,14 +1,144 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
+
+import { colors } from '../theme/colors';
 
 export const styles = StyleSheet.create({
-  container: {
+  safeArea: {
+    backgroundColor: colors.canvas,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  titulo: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  content: {
+    alignSelf: 'center',
+    flex: 1,
+    maxWidth: 620,
+    paddingBottom: 28,
+    paddingHorizontal: 22,
+    paddingTop: 8,
+    width: '100%',
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 50,
+  },
+  backButton: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: 14,
+    borderWidth: 1,
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
+  },
+  backButtonPressed: {
+    backgroundColor: '#E9EDF3',
+  },
+  backButtonText: {
+    color: colors.ink,
+    fontSize: 32,
+    fontWeight: '400',
+    lineHeight: 34,
+    marginLeft: -2,
+    marginTop: -3,
+  },
+  headerBrand: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  headerBrandMark: {
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: 9,
+    height: 30,
+    justifyContent: 'center',
+    width: 30,
+  },
+  headerBrandMarkText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '900',
+  },
+  headerBrandName: {
+    color: colors.ink,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0.9,
+  },
+  intro: {
+    marginTop: 48,
+  },
+  eyebrow: {
+    color: colors.primary,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 1.2,
+  },
+  title: {
+    color: colors.ink,
+    fontSize: 34,
+    fontWeight: '800',
+    letterSpacing: -1,
+    lineHeight: 40,
+    marginTop: 9,
+  },
+  description: {
+    color: colors.muted,
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 9,
+  },
+  formCard: {
+    backgroundColor: colors.surface,
+    borderColor: '#E9EDF3',
+    borderRadius: 22,
+    borderWidth: 1,
+    elevation: 2,
+    gap: 20,
+    marginTop: 30,
+    padding: 20,
+    shadowColor: '#101828',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.06,
+    shadowRadius: 22,
+  },
+  demoHint: {
+    alignItems: 'flex-start',
+    backgroundColor: '#EAF1FA',
+    borderRadius: 14,
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+  },
+  demoHintDot: {
+    backgroundColor: '#376CA6',
+    borderRadius: 4,
+    height: 8,
+    marginTop: 5,
+    width: 8,
+  },
+  demoHintText: {
+    color: '#315A87',
+    flex: 1,
+    fontSize: 12,
+    lineHeight: 18,
+  },
+  privacyText: {
+    color: colors.subtle,
+    fontSize: 11,
+    lineHeight: 17,
+    marginTop: 'auto',
+    paddingTop: 26,
+    textAlign: 'center',
   },
 });
