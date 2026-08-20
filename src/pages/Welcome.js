@@ -23,7 +23,7 @@ export function Welcome({ navigation }) {
         <Text style={styles.titulo}>Aulas de Terças e Quintas</Text>
         <Text style={styles.subtitulo}>3º Médio</Text>
         <Text style={styles.descricao}>
-          Programação para Dispositivos Móveis
+          AULA 01 · Primo Gordinhos Pastéis · 3º MÉDIO
         </Text>
 
         <Pressable

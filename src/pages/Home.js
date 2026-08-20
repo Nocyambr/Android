@@ -62,7 +62,7 @@ export function Home({ navigation, route }) {
             <Text numberOfLines={1} style={styles.saudacao}>
               Olá, {studentName}
             </Text>
-            <Text style={styles.textoApoio}>Vamos continuar aprendendo?</Text>
+            <Text style={styles.textoApoio}>Bem-Vindo Primo</Text>
           </View>
           <Pressable
             accessibilityLabel="Sair"
@@ -78,8 +78,8 @@ export function Home({ navigation, route }) {
         </View>
 
         <View style={styles.resumo}>
-          <Text style={styles.aula}>AULA 01 · 3º MÉDIO</Text>
-          <Text style={styles.titulo}>Programação para Dispositivos Móveis</Text>
+          <Text style={styles.aula}>AULA 01 · Primo Gordinhos Pastéis · 3º MÉDIO</Text>
+          <Text style={styles.titulo}>Como fritar Pastel</Text>
           <Text style={styles.horario}>Aulas de terças e quintas</Text>
           <View style={styles.linhaProgresso}>
             <Text style={styles.rotuloProgresso}>Progresso</Text>
