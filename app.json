@@ -1,22 +1,24 @@
 {
   "expo": {
-    "name": "Minha Turma",
-    "slug": "minha-turma",
+    "name": "MeuApp",
+    "slug": "MeuApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "minhaturma",
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.nocyambr.minhaturma"
+      "supportsTablet": true
     },
     "android": {
-      "package": "com.nocyambr.minhaturma",
       "adaptiveIcon": {
-        "backgroundColor": "#111B2E",
-        "foregroundImage": "./assets/icon.png"
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
       }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     }
   }
 }

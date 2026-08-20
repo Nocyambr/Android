@@ -6,132 +6,175 @@ import {
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { FormField } from '../components/FormField';
-import { PrimaryButton } from '../components/PrimaryButton';
-import { getStudentName, validateLogin } from '../utils/login';
 import { styles } from './Login.styles';
 
-const initialForm = {
-  email: '',
-  password: '',
-};
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function validateLogin({ email = '', password = '' }) {
+  const errors = {};
+  const normalizedEmail = email.trim();
+
+  if (!normalizedEmail) {
+    errors.email = 'Informe seu e-mail.';
+  } else if (!EMAIL_PATTERN.test(normalizedEmail)) {
+    errors.email = 'Digite um e-mail válido.';
+  }
+
+  if (!password) {
+    errors.password = 'Informe sua senha.';
+  } else if (password.length < 4) {
+    errors.password = 'A senha precisa ter pelo menos 4 caracteres.';
+  }
+
+  return errors;
+}
+
+export function getStudentName(email = '') {
+  const localPart = email.trim().split('@')[0] || '';
+  const words = localPart
+    .split(/[._-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+
+  return words.join(' ') || 'Aluno';
+}
 
 export function Login({ navigation }) {
   const passwordRef = useRef(null);
-  const [form, setForm] = useState(initialForm);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
-  function updateField(field, value) {
-    setForm((current) => ({ ...current, [field]: value }));
+  function updateEmail(value) {
+    setEmail(value);
 
-    if (errors[field]) {
-      setErrors((current) => ({ ...current, [field]: undefined }));
+    if (errors.email) {
+      setErrors((current) => ({ ...current, email: undefined }));
+    }
+  }
+
+  function updatePassword(value) {
+    setPassword(value);
+
+    if (errors.password) {
+      setErrors((current) => ({ ...current, password: undefined }));
     }
   }
 
   function handleSubmit() {
-    const nextErrors = validateLogin(form);
+    const nextErrors = validateLogin({ email, password });
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length === 0) {
       navigation.replace('Home', {
-        studentName: getStudentName(form.email),
+        studentName: getStudentName(email),
       });
     }
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="dark" backgroundColor="#F4F6F9" />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.keyboardView}
+        style={styles.container}
       >
+        <StatusBar style="dark" />
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={styles.conteudo}
           keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.content}>
-            <View style={styles.header}>
-              <Pressable
-                accessibilityLabel="Voltar"
-                accessibilityRole="button"
-                hitSlop={12}
-                onPress={() => navigation.goBack()}
-                style={({ pressed }) => [
-                  styles.backButton,
-                  pressed && styles.backButtonPressed,
-                ]}
-              >
-                <Text style={styles.backButtonText}>‹</Text>
-              </Pressable>
+          <View style={styles.cabecalho}>
+            <Pressable
+              accessibilityLabel="Voltar"
+              accessibilityRole="button"
+              onPress={() => navigation.goBack()}
+              style={({ pressed }) => [
+                styles.voltar,
+                pressed && styles.botaoPressionado,
+              ]}
+            >
+              <Text style={styles.textoVoltar}>Voltar</Text>
+            </Pressable>
+          </View>
 
-              <View style={styles.headerBrand}>
-                <View style={styles.headerBrandMark}>
-                  <Text style={styles.headerBrandMarkText}>MT</Text>
-                </View>
-                <Text style={styles.headerBrandName}>MINHA TURMA</Text>
-              </View>
-            </View>
+          <View style={styles.formulario}>
+            <Text style={styles.titulo}>Tela de Login</Text>
+            <Text style={styles.subtitulo}>Bem-vindo!</Text>
 
-            <View style={styles.intro}>
-              <Text style={styles.eyebrow}>ÁREA DO ALUNO</Text>
-              <Text style={styles.title}>Bem-vindo de volta</Text>
-              <Text style={styles.description}>
-                Entre para acompanhar seu progresso na disciplina.
+            <Text style={styles.rotulo}>E-mail</Text>
+            <TextInput
+              accessibilityLabel="E-mail"
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              onChangeText={updateEmail}
+              onSubmitEditing={() => passwordRef.current?.focus()}
+              placeholder="aluno@email.com"
+              returnKeyType="next"
+              style={[styles.campo, errors.email && styles.campoComErro]}
+              value={email}
+            />
+            {errors.email ? (
+              <Text accessibilityLiveRegion="polite" style={styles.erro}>
+                {errors.email}
               </Text>
-            </View>
+            ) : null}
 
-            <View style={styles.formCard}>
-              <FormField
-                autoCapitalize="none"
-                autoComplete="email"
-                error={errors.email}
-                keyboardType="email-address"
-                label="E-mail"
-                onChangeText={(value) => updateField('email', value)}
-                onSubmitEditing={() => passwordRef.current?.focus()}
-                placeholder="aluno@email.com"
-                returnKeyType="next"
-                value={form.email}
-              />
-
-              <FormField
+            <Text style={styles.rotulo}>Senha</Text>
+            <View
+              style={[
+                styles.campoSenha,
+                errors.password && styles.campoComErro,
+              ]}
+            >
+              <TextInput
+                accessibilityLabel="Senha"
                 autoCapitalize="none"
                 autoComplete="current-password"
-                error={errors.password}
-                label="Senha"
-                onChangeText={(value) => updateField('password', value)}
+                onChangeText={updatePassword}
                 onSubmitEditing={handleSubmit}
                 placeholder="Mínimo de 4 caracteres"
                 ref={passwordRef}
                 returnKeyType="done"
-                rightAction={showPassword ? 'Ocultar' : 'Mostrar'}
                 secureTextEntry={!showPassword}
-                onRightAction={() => setShowPassword((current) => !current)}
-                value={form.password}
+                style={styles.entradaSenha}
+                value={password}
               />
-
-              <PrimaryButton label="Entrar" onPress={handleSubmit} />
+              <Pressable
+                accessibilityLabel={`${showPassword ? 'Ocultar' : 'Mostrar'} senha`}
+                accessibilityRole="button"
+                onPress={() => setShowPassword((current) => !current)}
+                style={styles.mostrarSenha}
+              >
+                <Text style={styles.textoMostrarSenha}>
+                  {showPassword ? 'Ocultar' : 'Mostrar'}
+                </Text>
+              </Pressable>
             </View>
-
-            <View style={styles.demoHint}>
-              <View style={styles.demoHintDot} />
-              <Text style={styles.demoHintText}>
-                Para testar, use qualquer e-mail válido e uma senha com pelo
-                menos 4 caracteres.
+            {errors.password ? (
+              <Text accessibilityLiveRegion="polite" style={styles.erro}>
+                {errors.password}
               </Text>
-            </View>
+            ) : null}
 
-            <Text style={styles.privacyText}>
-              Esta demonstração funciona localmente e não envia seus dados.
-            </Text>
+            <Pressable
+              accessibilityLabel="Entrar"
+              accessibilityRole="button"
+              onPress={handleSubmit}
+              style={({ pressed }) => [
+                styles.botao,
+                pressed && styles.botaoPressionado,
+              ]}
+            >
+              <Text style={styles.textoBotao}>Entrar</Text>
+            </Pressable>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

@@ -8,57 +8,37 @@ import { styles } from './Home.styles';
 const concepts = [
   {
     id: 'react-native',
-    number: '01',
     title: 'React Native',
-    description: 'JavaScript e JSX com componentes realmente nativos.',
+    description: 'JavaScript e JSX com componentes nativos.',
   },
   {
     id: 'expo',
-    number: '02',
     title: 'Expo',
-    description: 'Configuração simplificada, Metro e atualização rápida.',
+    description: 'Configuração simples e atualização rápida do aplicativo.',
   },
   {
     id: 'components',
-    number: '03',
     title: 'View e Text',
-    description: 'Blocos essenciais para organizar e exibir a interface.',
+    description: 'Componentes básicos para organizar e exibir a interface.',
   },
 ];
 
 const checklist = [
-  {
-    id: 'node',
-    title: 'Node.js LTS instalado',
-    description: 'Ambiente preparado para executar o Expo.',
-  },
-  {
-    id: 'project',
-    title: 'Projeto Expo criado',
-    description: 'Estrutura em branco pronta para desenvolver.',
-  },
-  {
-    id: 'android',
-    title: 'App aberto no Android',
-    description: 'Execução validada no emulador ou celular.',
-  },
-  {
-    id: 'component',
-    title: 'Primeiro componente editado',
-    description: 'View, Text e estilos aplicados no aplicativo.',
-  },
+  'Node.js LTS instalado',
+  'Projeto Expo criado',
+  'App aberto no Android',
+  'Primeiro componente editado',
 ];
 
 export function Home({ navigation, route }) {
-  const [completedIds, setCompletedIds] = useState([]);
+  const [completedItems, setCompletedItems] = useState([]);
   const studentName = route?.params?.studentName || 'Aluno';
-  const progress = completedIds.length / checklist.length;
 
-  function toggleChecklistItem(itemId) {
-    setCompletedIds((current) =>
-      current.includes(itemId)
-        ? current.filter((id) => id !== itemId)
-        : [...current, itemId],
+  function toggleItem(item) {
+    setCompletedItems((current) =>
+      current.includes(item)
+        ? current.filter((currentItem) => currentItem !== item)
+        : [...current, item],
     );
   }
 
@@ -71,139 +51,90 @@ export function Home({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="dark" backgroundColor="#F4F6F9" />
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={styles.conteudo}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <View style={styles.identity}>
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>{studentName.charAt(0)}</Text>
-              </View>
-              <View style={styles.greetingBlock}>
-                <Text style={styles.greeting}>Olá, {studentName}</Text>
-                <Text style={styles.greetingCaption}>Vamos continuar aprendendo?</Text>
-              </View>
-            </View>
+        <StatusBar style="dark" />
 
-            <Pressable
-              accessibilityLabel="Sair"
-              accessibilityRole="button"
-              hitSlop={10}
-              onPress={handleLogout}
-              style={({ pressed }) => [
-                styles.logoutButton,
-                pressed && styles.logoutButtonPressed,
-              ]}
-            >
-              <Text style={styles.logoutText}>Sair</Text>
-            </Pressable>
-          </View>
-
-          <View style={styles.courseCard}>
-            <View style={styles.courseTopRow}>
-              <View style={styles.coursePill}>
-                <Text style={styles.coursePillText}>AULA 01</Text>
-              </View>
-              <Text style={styles.courseLevel}>3º MÉDIO</Text>
-            </View>
-            <Text style={styles.courseTitle}>
-              Programação para{`\n`}Dispositivos Móveis
+        <View style={styles.cabecalho}>
+          <View style={styles.usuario}>
+            <Text numberOfLines={1} style={styles.saudacao}>
+              Olá, {studentName}
             </Text>
-            <Text style={styles.courseSchedule}>Encontros às terças e quintas</Text>
+            <Text style={styles.textoApoio}>Vamos continuar aprendendo?</Text>
+          </View>
+          <Pressable
+            accessibilityLabel="Sair"
+            accessibilityRole="button"
+            onPress={handleLogout}
+            style={({ pressed }) => [
+              styles.sair,
+              pressed && styles.botaoPressionado,
+            ]}
+          >
+            <Text style={styles.textoSair}>Sair</Text>
+          </Pressable>
+        </View>
 
-            <View style={styles.progressBlock}>
-              <View style={styles.progressLabels}>
-                <Text style={styles.progressLabel}>Progresso do checklist</Text>
-                <Text style={styles.progressValue}>
-                  {completedIds.length}/{checklist.length}
-                </Text>
-              </View>
-              <View style={styles.progressTrack}>
+        <View style={styles.resumo}>
+          <Text style={styles.aula}>AULA 01 · 3º MÉDIO</Text>
+          <Text style={styles.titulo}>Programação para Dispositivos Móveis</Text>
+          <Text style={styles.horario}>Aulas de terças e quintas</Text>
+          <View style={styles.linhaProgresso}>
+            <Text style={styles.rotuloProgresso}>Progresso</Text>
+            <Text style={styles.progresso}>
+              {completedItems.length}/{checklist.length}
+            </Text>
+          </View>
+        </View>
+
+        <Text style={styles.tituloSecao}>Conceitos da aula</Text>
+        {concepts.map((concept) => (
+          <View key={concept.id} style={styles.cartao}>
+            <Text style={styles.tituloCartao}>{concept.title}</Text>
+            <Text style={styles.descricaoCartao}>{concept.description}</Text>
+          </View>
+        ))}
+
+        <Text style={styles.tituloSecao}>Meu checklist</Text>
+        <View style={styles.lista}>
+          {checklist.map((item) => {
+            const isCompleted = completedItems.includes(item);
+
+            return (
+              <Pressable
+                accessibilityLabel={`${
+                  isCompleted ? 'Desmarcar' : 'Marcar'
+                } ${item} como concluído`}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: isCompleted }}
+                key={item}
+                onPress={() => toggleItem(item)}
+                style={({ pressed }) => [
+                  styles.item,
+                  pressed && styles.itemPressionado,
+                ]}
+              >
                 <View
-                  testID="course-progress"
-                  style={[styles.progressFill, { width: `${progress * 100}%` }]}
-                />
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Conceitos da aula</Text>
-              <Text style={styles.sectionMeta}>3 tópicos</Text>
-            </View>
-
-            <View style={styles.conceptsGrid}>
-              {concepts.map((concept) => (
-                <View key={concept.id} style={styles.conceptCard}>
-                  <Text style={styles.conceptNumber}>{concept.number}</Text>
-                  <Text style={styles.conceptTitle}>{concept.title}</Text>
-                  <Text style={styles.conceptDescription}>
-                    {concept.description}
-                  </Text>
+                  style={[
+                    styles.checkbox,
+                    isCompleted && styles.checkboxConcluido,
+                  ]}
+                >
+                  {isCompleted ? <Text style={styles.check}>✓</Text> : null}
                 </View>
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Meu checklist</Text>
-              <Text style={styles.sectionMeta}>
-                {completedIds.length} de {checklist.length} concluídos
-              </Text>
-            </View>
-
-            <View style={styles.checklistCard}>
-              {checklist.map((item, index) => {
-                const isCompleted = completedIds.includes(item.id);
-
-                return (
-                  <Pressable
-                    accessibilityLabel={`${
-                      isCompleted ? 'Desmarcar' : 'Marcar'
-                    } ${item.title} como concluído`}
-                    accessibilityRole="checkbox"
-                    accessibilityState={{ checked: isCompleted }}
-                    key={item.id}
-                    onPress={() => toggleChecklistItem(item.id)}
-                    style={({ pressed }) => [
-                      styles.checklistItem,
-                      index < checklist.length - 1 && styles.checklistItemBorder,
-                      pressed && styles.checklistItemPressed,
-                    ]}
-                  >
-                    <View
-                      style={[
-                        styles.checkbox,
-                        isCompleted && styles.checkboxCompleted,
-                      ]}
-                    >
-                      {isCompleted ? <Text style={styles.checkmark}>✓</Text> : null}
-                    </View>
-                    <View style={styles.checklistCopy}>
-                      <Text
-                        style={[
-                          styles.checklistTitle,
-                          isCompleted && styles.checklistTitleCompleted,
-                        ]}
-                      >
-                        {item.title}
-                      </Text>
-                      <Text style={styles.checklistDescription}>
-                        {item.description}
-                      </Text>
-                    </View>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
-
-          <Text style={styles.footerText}>Feito com React Native + Expo</Text>
+                <Text
+                  style={[
+                    styles.textoItem,
+                    isCompleted && styles.textoConcluido,
+                  ]}
+                >
+                  {item}
+                </Text>
+              </Pressable>
+            );
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>
